@@ -1,6 +1,6 @@
 import { Component, Vue } from "vue-property-decorator";
 import Pusher, { Channel } from "pusher-js";
-import Config from "@/config/Config";
+import { Config } from "@/config/Config";
 
 @Component
 export default class RoomComponent extends Vue {
@@ -8,18 +8,18 @@ export default class RoomComponent extends Vue {
     code = this.$route.params.code;
     channel!: Channel;
     connected = false;
-    config = new Config();
 
     mounted(): void {
-        console.log(this.config.PUSHER.ID);
-        
-        const pusher = new Pusher(this.config.PUSHER.ID, {
-            authEndpoint: this.config.PUSHER.AUTH_ENDPOINT,
-            cluster: this.config.PUSHER.CLUSTER
+        console.log(Config);
+
+        Pusher.logToConsole = !Config.PRODUCTION;
+        const pusher = new Pusher(Config.PUSHER.KEY, {
+            authEndpoint: Config.PUSHER.AUTH_ENDPOINT,
+            cluster: Config.PUSHER.CLUSTER
         });
         this.channel = pusher.subscribe(`private-${this.code}`);
         this.channel.bind('my-event', this.handleConnection);
-        this.channel.bind('pusher:subscription_succeeded', this.stablishConnection);
+        this.channel.bind('pusher:subscription_succeeded', this.stablishedConnection);
     }
 
     get test(): string {
@@ -27,10 +27,10 @@ export default class RoomComponent extends Vue {
     }
 
     handleConnection(): void {
-        this.connected = true;  
+        this.connected = true;
     }
 
-    stablishConnection(): void {
+    stablishedConnection(): void {
         this.connected = true;
     }
 

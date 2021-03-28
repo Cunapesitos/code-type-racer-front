@@ -4,12 +4,12 @@
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
+    "serve-doppler-env": "doppler run -- npm run serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
     "core-js": "^3.6.5",
-    "dotenv": "^8.2.0",
     "pusher-js": "^7.0.3",
     "vue": "^2.6.11",
     "vue-class-component": "^7.2.3",

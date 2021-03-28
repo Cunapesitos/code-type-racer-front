@@ -1,7 +1,6 @@
 <template>
   <div>
-    <h1>{{ code }}</h1>
-    <p>{{ connected }}</p>
+    <p>Connected to room {{code}} : {{ connected }}</p>
     <!-- <input type="text" id="code" v-model="code" /> -->
   </div>
 </template>
