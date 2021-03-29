@@ -1,6 +1,7 @@
 import { Component, Vue } from "vue-property-decorator";
 import Pusher, { Channel } from "pusher-js";
 import { Config } from "@/config/Config";
+import Activity from "@/config/Activity";
 
 @Component
 export default class RoomComponent extends Vue {
@@ -10,7 +11,7 @@ export default class RoomComponent extends Vue {
     connected = false;
 
     mounted(): void {
-        console.log(Config);
+        Activity.log(Config);
 
         Pusher.logToConsole = !Config.PRODUCTION;
         const pusher = new Pusher(Config.PUSHER.KEY, {
