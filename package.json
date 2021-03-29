@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "start": "npm run build & node server.js",
+    "start": "node server.js",
     "serve": "vue-cli-service serve",
     "serve-doppler-env": "doppler run -- npm run serve",
     "build": "vue-cli-service build",
