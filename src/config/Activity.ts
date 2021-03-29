@@ -1,17 +1,19 @@
 import { Config } from "./Config";
 
-const log = (body: any = {}) => {
+// eslint-disable-next-line
+const log = (body: any = {}): void => {
     if (!Config.PRODUCTION) {
+        // tslint:disable-next-line:no-console
         console.log(body);
     }
 };
 
-const info = (message: string) => {
+const info = (message: string): void => {
     // tslint:disable-next-line:no-console
     console.info(message);
 };
 
-const error = (message: string) => {
+const error = (message: string): void => {
     // tslint:disable-next-line:no-console
     console.error(message);
 };
