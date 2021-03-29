@@ -35,4 +35,12 @@ export default class RoomComponent extends Vue {
         this.connected = true;
     }
 
+    act(): void {
+        Activity.log("OK");
+    }
+
+    get roomUrl(): string {
+        return window.location.origin + "/room/" + this.code;
+    }
+
 }

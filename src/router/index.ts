@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import VueRouter, { RouteConfig } from 'vue-router';
 import Room from "@/components/room/Room.vue";
+import Home from "@/components/home/Home.vue";
 
 Vue.use(VueRouter);
 
@@ -11,8 +12,14 @@ const routes: Array<RouteConfig> = [
     },
     {
         path: '/room/:code',
+        name: 'room',
         component: Room,
         props: true,
+    },
+    {
+        path: '/home',
+        name: 'home',
+        component: Home
     }
 ]
 
