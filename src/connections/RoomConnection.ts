@@ -32,6 +32,7 @@ export default class RoomConnection {
         } catch (err) {
             Activity.log("NOt exists ");
             this.onRoomNotExist();
+            return;
         }
         Pusher.logToConsole = !Config.PRODUCTION;
         this.pusher = new Pusher(Config.PUSHER.KEY, {
