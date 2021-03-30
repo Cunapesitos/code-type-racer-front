@@ -11,7 +11,7 @@ export default class RoomComponent extends Vue {
     connected = false;
     roomConnection!: RoomConnection;
     players: Array<Player> = [];
-    user: Player = new Player(1, "Player-");
+    user: Player = new Player("1", "Player-");
     hoverUsername = false;
     editUsername = false;
     roomExists = true;
@@ -22,14 +22,21 @@ export default class RoomComponent extends Vue {
         this.roomConnection.setOnConnectionStablished(this.stablishedConnection);
         this.roomConnection.setOnPlayerConnected(this.playerConnected);
         this.roomConnection.setOnRoomNotExist(this.roomNotExist);
+        this.roomConnection.setOnPlayerJoined(this.addPlayer);
+        this.roomConnection.setOnPlayerLeft(this.removePlayer);
         this.roomConnection.connect(this.code);
     }
 
     // eslint-disable-next-line
-    stablishedConnection(): void {
+    stablishedConnection(members: any): void {
+        Activity.log(members.me);
+        this.user.username = members.me.info.username;
+        members.each((member: any) => {
+            this.players.push(new Player(member.id, member.info.username));
+            Activity.log(member.info.username);
+        });
         this.connected = true;
         this.roomExists = true;
-        this.players.push(this.user);
     }
 
     playerConnected(player: Player): void {
@@ -46,9 +53,28 @@ export default class RoomComponent extends Vue {
         return window.location.origin + "/room/" + this.code;
     }
 
-    addPlayer(): void {
-        const p = new Player(this.players.length + 1, "daasdffdsdfdfssafd");
-        this.players.push(p);
+    // eslint-disable-next-line
+    addPlayer(member: any): void {
+        this.players.push(new Player(member.id, member.info.username));
+        Activity.log("new member: " + member.info.username);
+    }
+
+    // eslint-disable-next-line
+    removePlayer(member: any): void {
+        const playerToRemove: Player = new Player(member.id, member.info.username);
+        Activity.log("Player found: " + playerToRemove);
+        const index = 0;
+        for (const i in this.players) {
+            Activity.log(i);
+            if (this.players[i].id == playerToRemove.id) {
+                //index = i;
+            }
+        }
+        Activity.log("Index found: " + index);
+        if (index > -1) {
+            this.players.splice(index, 1);
+        }
+        Activity.log("old member: " + member.info.username);
     }
 
     changeUsername(): void {

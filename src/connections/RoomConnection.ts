@@ -11,8 +11,12 @@ export default class RoomConnection {
     private channel!: Channel;
     private onPlayerConnected!: (player: Player) => void;
     // eslint-disable-next-line
-    private onConnectionStablished!: () => void;
+    private onConnectionStablished!: (members: any) => void;
     private onRoomNotExist!: () => void;
+    // eslint-disable-next-line
+    private onPlayerJoined!: (member: any) => void;
+    // eslint-disable-next-line
+    private onPlayerLeft!: (member: any) => void;
 
     private constructor() {
         this.code = "";
@@ -39,9 +43,11 @@ export default class RoomConnection {
             authEndpoint: Config.PUSHER.AUTH_ENDPOINT + 'api/room/auth',
             cluster: Config.PUSHER.CLUSTER
         });
-        this.channel = this.pusher.subscribe(`private-${code}`);
+        this.channel = this.pusher.subscribe(`presence-${code}`);
         this.channel.bind('player-connected', this.handlePlayerConnected);
         this.channel.bind('pusher:subscription_succeeded', this.onConnectionStablished);
+        this.channel.bind('pusher:member_removed', this.onPlayerLeft);
+		this.channel.bind('pusher:member_added', this.onPlayerJoined);
     }
 
     // eslint-disable-next-line
@@ -56,13 +62,13 @@ export default class RoomConnection {
     }
 
     // eslint-disable-next-line
-    private handleOnConnectionStablished(): void {
-        // Activity.log(data);
-        this.onConnectionStablished();
+    private handleOnConnectionStablished(members: any): void {
+        //Activity.log(members);
+        //this.onConnectionStablished;
     }
 
     // eslint-disable-next-line
-    public setOnConnectionStablished(action: () => void): void {
+    public setOnConnectionStablished(action: (members: any) => void): void {
         this.onConnectionStablished = action;
     }
 
@@ -72,5 +78,15 @@ export default class RoomConnection {
 
     public setOnRoomNotExist(action: () => void): void {
         this.onRoomNotExist = action;
+    }
+
+    // eslint-disable-next-line
+    public setOnPlayerJoined(action: (member: any) => void): void {
+        this.onPlayerJoined = action;
+    }
+
+     // eslint-disable-next-line
+     public setOnPlayerLeft(action: (member: any) => void): void {
+        this.onPlayerLeft = action;
     }
 }
