@@ -63,11 +63,11 @@ export default class RoomComponent extends Vue {
     removePlayer(member: any): void {
         const playerToRemove: Player = new Player(member.id, member.info.username);
         Activity.log("Player found: " + playerToRemove);
-        const index = 0;
+        let index = 0;
         for (const i in this.players) {
             Activity.log(i);
             if (this.players[i].id == playerToRemove.id) {
-                //index = i;
+                index = + i;
             }
         }
         Activity.log("Index found: " + index);
