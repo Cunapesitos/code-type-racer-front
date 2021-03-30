@@ -1,6 +1,7 @@
 import { Component, Vue } from "vue-property-decorator";
 import axios from "axios";
 import Activity from "@/config/Activity";
+import { Config } from "@/config/Config";
 
 @Component
 export default class HomeComponent extends Vue {
@@ -10,7 +11,7 @@ export default class HomeComponent extends Vue {
 
     create(): void {
         axios
-            .get('https://code-type-racer-back.herokuapp.com/api/room/new')
+            .get(Config.PUSHER.AUTH_ENDPOINT + 'api/room/new')
             .then(this.handleResponse)
     }
 

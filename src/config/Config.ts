@@ -6,6 +6,6 @@ export const Config = {
         KEY: process.env.VUE_APP_PUSHER_APP_KEY || 'key not exist',
         SECRET: process.env.VUE_APP_PUSHER_APP_SECRET || 'secret not exist',
         CLUSTER: process.env.VUE_APP_PUSHER_APP_CLUSTER || 'cluster not exist',
-        AUTH_ENDPOINT: process.env.VUE_APP_PUSHER_APP_AUTH_ENDPOINT || 'ur not existl'
+        AUTH_ENDPOINT: process.env.VUE_APP_PUSHER_APP_ENDPOINT || 'ur not existl'
     }
 }
