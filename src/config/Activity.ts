@@ -13,9 +13,11 @@ const info = (message: string): void => {
     console.info(message);
 };
 
-const error = (message: string): void => {
+// eslint-disable-next-line
+const error = (error: any): void => {
     // eslint-disable-next-line
-    console.error(message);
+    console.error(error.msg);
+    console.error(error);
 };
 
 const activity = {

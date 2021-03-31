@@ -23,7 +23,7 @@
           </label>
         </div>
       </div>
-      <div class="col-6" v-if="roomExists">
+      <div class="col-6" v-if="joined">
         <div class="row g-3 align-items-center my-3 justify-content-center">
           <div class="col-auto">
             <label
@@ -111,16 +111,19 @@
           </div>
         </div>
       </div>
-      <div class="col-6" v-if="!roomExists">
+      <div class="col-6" v-if="!joined">
         <div class="row g-3 align-items-center my-3 justify-content-center">
           <div class="col-auto">
-            <label class="h2"> Room not exists </label>
+            <label class="h2"> {{roomMessageState}} </label>
           </div>
         </div>
       </div>
       <div class="col-3">
         <div class="row border border-dark mb-3">
           <h3 class="text-center">Players</h3>
+          <button class="btn btn-dark" v-on:click="sendTestAction">
+            Send test
+          </button>
         </div>
         <label
           v-for="player in players"

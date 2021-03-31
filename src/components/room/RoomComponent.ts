@@ -3,6 +3,8 @@ import { Config } from "@/config/Config";
 import Activity from "@/config/Activity";
 import RoomConnection from "@/connections/RoomConnection";
 import Player from "@/models/Player";
+import Action from "@/models/Action";
+import axios from "axios";
 
 @Component
 export default class RoomComponent extends Vue {
@@ -14,14 +16,16 @@ export default class RoomComponent extends Vue {
     user: Player = new Player("1", "Player-");
     hoverUsername = false;
     editUsername = false;
-    roomExists = true;
+    joined = true;
+    roomMessageState = "";
+    oldUserName = "";
 
     mounted(): void {
         Activity.log(Config);
         this.roomConnection = RoomConnection.getInstance();
         this.roomConnection.setOnConnectionStablished(this.stablishedConnection);
-        this.roomConnection.setOnPlayerConnected(this.playerConnected);
-        this.roomConnection.setOnRoomNotExist(this.roomNotExist);
+        this.roomConnection.setOnPlayerAction(this.playerAction);
+        this.roomConnection.setOnRoomNotJoined(this.roomNotJoined);
         this.roomConnection.setOnPlayerJoined(this.addPlayer);
         this.roomConnection.setOnPlayerLeft(this.removePlayer);
         this.roomConnection.connect(this.code);
@@ -29,24 +33,18 @@ export default class RoomComponent extends Vue {
 
     // eslint-disable-next-line
     stablishedConnection(members: any): void {
+        Activity.log("This is my new data:");
         Activity.log(members.me);
         this.user.username = members.me.info.username;
+        this.user.id = members.me.id;
+        Activity.log("All users");
+        // eslint-disable-next-line
         members.each((member: any) => {
             this.players.push(new Player(member.id, member.info.username));
-            Activity.log(member.info.username);
+            Activity.log(member);
         });
         this.connected = true;
-        this.roomExists = true;
-    }
-
-    playerConnected(player: Player): void {
-        alert("OK");
-        Activity.log(player);
-        this.players.push(player);
-    }
-
-    act(): void {
-        Activity.log("OK");
+        this.joined = true;
     }
 
     get roomUrl(): string {
@@ -79,14 +77,65 @@ export default class RoomComponent extends Vue {
 
     changeUsername(): void {
         this.editUsername = true;
+        this.oldUserName = this.user.username;
     }
 
     saveUsername(): void {
         this.editUsername = false;
+        const changed = this.roomConnection.changeUsername(this.user);
+        /*
+        if(changed){
+            Activity.log("Sending action with:");
+            Activity.log(this.user);
+            this.sendAction(new Action(this.user, "username-changed"));
+        }else{
+            Activity.log("Error changing username");
+        }
+        */
     }
 
-    roomNotExist(): void {
-        this.roomExists = false;
+    // eslint-disable-next-line
+    roomNotJoined(error: any): void {
+        this.joined = false;
+        this.roomMessageState = error.message;
+    }
+
+    sendTestAction(): void {
+        this.sendAction(new Action(this.user, "test"));
+    }
+
+    sendAction(action: Action): void {
+        this.roomConnection.sendAction(action);
+    }
+
+    playerAction(action: Action): void {
+        Activity.log("New action:");
+        Activity.log(action);
+        const playerPos: number = this.getPlayerPosById(action.player.id);
+        Activity.log("Player found:");
+        Activity.log(this.players[playerPos]);
+        switch (action.name) {
+            case "username-changed":
+                Activity.log("Changing username");
+                this.players[playerPos].username = action.player.username;
+                break;
+            case "username-testing":
+                break;
+            default:
+                alert("from: " + action.player.username + "; " + action.name);
+                break;
+        }
+    }
+
+    private getPlayerPosById(id: string): number {
+        Activity.log("Searching player with id:" + id);
+        for (const i in this.players) {
+            Activity.log(this.players[i].username);
+            if (this.players[i].id === id) {
+                return +i;
+            }
+        }
+        return -1;
     }
 
 }
